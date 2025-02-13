@@ -16,3 +16,12 @@ export interface Workflow {
   estimatedTime?: string; // Approximate time to complete the workflow
   difficultyLevel?: "Beginner" | "Intermediate" | "Advanced"; // Indicates complexity
 }
+
+export interface WorkflowField {
+  name: string;
+  label: string;
+  placeholder?: string;
+  type?: "text" | "textarea" | "select";
+  required?: boolean;
+  options?: string[];
+}
