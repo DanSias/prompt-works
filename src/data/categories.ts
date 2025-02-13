@@ -42,7 +42,7 @@ export const categories: Category[] = [
       "Create compelling marketing materials, social media content, and email campaigns that captivate your audience and drive conversions.",
   },
   {
-    slug: "customer-communication",
+    slug: "customer-experience",
     title: "Customer Engagement & Support",
     icon: MessageCircle,
     description:
