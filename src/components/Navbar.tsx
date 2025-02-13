@@ -1,44 +1,80 @@
 "use client";
 
-import Link from "next/link";
-import { categories } from "@/data/categories";
-import { Menu } from "@headlessui/react";
-import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import SearchBar from "@/components/SearchBar";
+import { Heart, Settings, User } from "lucide-react";
+import NavbarLogo from "./NavbarLogo";
+import SlideOverPanel from "@/components/SlideOverPanel";
+import SettingsContent from "./SettingsContent";
+import FavoritesContent from "./FavoritesContent";
+import Modal from "@/components/Modal";
+import OnboardingForm from "./OnboardingForm";
 
-export default function Navbar() {
+/**
+ * Header Component
+ *
+ * Displays the PromptWorks logo, a truly centered search bar, and icons for favorites, settings, and profile.
+ */
+export default function Header() {
+  const [isFavoritesOpen, setFavoritesOpen] = useState(false);
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isProfileOpen, setProfileOpen] = useState(false); // New state for profile modal
+
   return (
-    <nav className="bg-gray-800 text-white p-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">
-          PromptWorks
-        </Link>
-
-        <div className="space-x-4 flex items-center">
-          {/* Dropdown Menu for Categories */}
-          <Menu as="div" className="relative inline-block text-left">
-            <Menu.Button className="inline-flex justify-center w-full px-4 py-2 bg-gray-700 text-sm font-medium rounded-md hover:bg-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-              Categories
-              <ChevronDown className="ml-2 h-5 w-5" />
-            </Menu.Button>
-
-            <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-              {categories.map((category) => (
-                <Menu.Item key={category.slug}>
-                  {({ active }) => (
-                    <Link
-                      href={`/categories/${category.slug}`}
-                      className={`${
-                        active ? "bg-gray-100" : ""
-                      } block px-4 py-2 text-sm text-gray-900 hover:bg-gray-100`}>
-                      {category.title}
-                    </Link>
-                  )}
-                </Menu.Item>
-              ))}
-            </Menu.Items>
-          </Menu>
-        </div>
+    <header className="sticky top-0 flex items-center justify-between p-4 px-8 bg-zinc-800 text-white shadow-md h-16">
+      {/* Logo and Title */}
+      <div>
+        <NavbarLogo />
       </div>
-    </nav>
+
+      {/* Centered Search Bar */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 w-full max-w-lg">
+        <SearchBar />
+      </div>
+
+      {/* Icons for Favorites, Settings, and Profile */}
+      <div className="flex items-center space-x-4">
+        <Heart
+          className="w-6 h-6 cursor-pointer hover:text-red-400"
+          onClick={() => setFavoritesOpen(true)}
+        />
+        <Settings
+          className="w-6 h-6 cursor-pointer hover:text-blue-400"
+          onClick={() => setSettingsOpen(true)}
+        />
+        <User
+          className="w-6 h-6 cursor-pointer hover:text-green-400"
+          onClick={() => setProfileOpen(true)} // Open Profile Modal
+        />
+      </div>
+
+      {/* Favorites Slide-Over */}
+      <SlideOverPanel
+        isOpen={isFavoritesOpen}
+        onClose={() => setFavoritesOpen(false)}
+        title="Favorites">
+        <div>
+          <FavoritesContent />
+        </div>
+      </SlideOverPanel>
+
+      {/* Settings Slide-Over */}
+      <SlideOverPanel
+        isOpen={isSettingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        title="Settings">
+        <div>
+          <SettingsContent />
+        </div>
+      </SlideOverPanel>
+
+      {/* Profile Modal for Onboarding Form */}
+      <Modal
+        isOpen={isProfileOpen}
+        onClose={() => setProfileOpen(false)}
+        title="Your Profile">
+        <OnboardingForm />
+      </Modal>
+    </header>
   );
 }
