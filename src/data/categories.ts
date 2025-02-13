@@ -1,61 +1,86 @@
-// src/data/categories.ts
+import { Category } from "@/types/category";
 import {
-  MessageCircle,
+  Briefcase,
+  DollarSign,
+  ShoppingCart,
   Megaphone,
-  BarChart2,
+  MessageCircle,
   UserPlus,
   ClipboardList,
-  Briefcase,
+  BarChart2,
+  FileText,
+  Settings,
 } from "lucide-react";
-
-export interface Category {
-  slug: string;
-  title: string;
-  icon: React.ElementType; // This will hold the icon component
-  description: string;
-}
 
 export const categories: Category[] = [
   {
-    slug: "customer-communication",
-    title: "Customer Communication & Support",
-    icon: MessageCircle,
+    slug: "business-strategy",
+    title: "Strategic Planning & Decision Making",
+    icon: Briefcase,
     description:
-      "Craft professional responses for customer inquiries, complaints, and support tickets to enhance client relationships.",
+      "Gain a competitive edge with AI-assisted business analysis, risk assessment, and market research for smarter decision-making.",
+  },
+  {
+    slug: "financial-analysis",
+    title: "Financial Planning & Analysis",
+    icon: DollarSign,
+    description:
+      "Optimize financial decision-making with AI-driven forecasting, budgeting, and investment analysis.",
+  },
+  {
+    slug: "sales-outreach",
+    title: "Sales Optimization & Lead Nurturing",
+    icon: ShoppingCart,
+    description:
+      "Boost sales performance with AI-powered outreach, lead qualification, and follow-up messaging that converts prospects into customers.",
   },
   {
     slug: "marketing-content",
-    title: "Marketing & Content Creation",
+    title: "Marketing & Content Strategy",
     icon: Megaphone,
     description:
-      "Generate engaging content for social media, blogs, and email campaigns to boost brand visibility and customer engagement.",
+      "Create compelling marketing materials, social media content, and email campaigns that captivate your audience and drive conversions.",
   },
   {
-    slug: "data-analysis",
-    title: "Data Analysis & Reporting",
-    icon: BarChart2,
+    slug: "customer-communication",
+    title: "Customer Engagement & Support",
+    icon: MessageCircle,
     description:
-      "Simplify complex data reports and generate insights for informed business decisions.",
+      "Deliver seamless customer interactions with AI-powered responses, complaint resolution, and personalized follow-ups.",
   },
   {
     slug: "hr-recruitment",
-    title: "Human Resources & Recruitment",
+    title: "HR & Talent Acquisition",
     icon: UserPlus,
     description:
-      "Create job descriptions, interview questions, and performance reviews to streamline HR processes.",
+      "Streamline hiring and employee management with AI-generated job descriptions, interview questions, and performance evaluations.",
   },
   {
     slug: "project-management",
-    title: "Project Management & Organization",
+    title: "Project Planning & Execution",
     icon: ClipboardList,
     description:
-      "Manage projects efficiently with task lists, status updates, and meeting agendas.",
+      "Optimize project workflows with AI-generated task lists, meeting agendas, and risk assessments to keep teams aligned and productive.",
   },
   {
-    slug: "business-strategy",
-    title: "Business Strategy & Decision Support",
-    icon: Briefcase,
+    slug: "data-analysis",
+    title: "Data Insights & Reporting",
+    icon: BarChart2,
     description:
-      "Brainstorm strategic initiatives and assess risks with AI-driven decision-making support.",
+      "Transform raw data into actionable insights with AI-powered analysis, trend forecasting, and automated reporting.",
+  },
+  {
+    slug: "training-docs",
+    title: "Training & Knowledge Management",
+    icon: FileText,
+    description:
+      "Create structured learning materials, user manuals, and knowledge bases to improve onboarding and skill development.",
+  },
+  {
+    slug: "productivity-tools",
+    title: "Workflow Automation & Productivity ",
+    icon: Settings,
+    description:
+      "Eliminate inefficiencies with AI-driven task automation, smart scheduling, and workflow optimization.",
   },
 ];
