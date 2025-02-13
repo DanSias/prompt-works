@@ -1,15 +1,23 @@
 "use client";
 
+/**
+ * GeneratePromptButton Component
+ *
+ * - Provides buttons to copy generated prompts and open them in different LLM interfaces.
+ * - Displays a toast notification if required fields are not filled.
+ * - Fixes dropdown behavior and capitalizes LLM names properly.
+ */
+
 import { useState } from "react";
 import { Menu } from "@headlessui/react";
 import { ChevronDown } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const LLM_LINKS = {
-  chatgpt: "https://chat.openai.com/",
-  claude: "https://claude.ai/",
-  gemini: "https://gemini.google.com/",
-  deepseek: "https://deepseek.com/",
+  ChatGPT: "https://chat.openai.com/",
+  Claude: "https://claude.ai/",
+  Gemini: "https://gemini.google.com/",
+  DeepSeek: "https://deepseek.com/",
 };
 
 export default function GeneratePromptButton({
@@ -21,23 +29,29 @@ export default function GeneratePromptButton({
 
   const handleCopy = () => {
     const prompt = generatePrompt();
-    if (prompt) {
-      navigator.clipboard.writeText(prompt);
-      toast.success("Prompt copied to clipboard!");
+    if (!prompt) {
+      toast.error(
+        "Please fill in all required fields before generating a prompt."
+      );
+      return;
     }
+    navigator.clipboard.writeText(prompt);
+    toast.success("Prompt copied to clipboard!");
+    setIsDropdownOpen(false);
   };
 
   const openLLM = (llm: keyof typeof LLM_LINKS) => {
     const prompt = generatePrompt();
-    if (prompt) {
-      navigator.clipboard.writeText(prompt);
-      window.open(LLM_LINKS[llm], "_blank");
-      toast.success(
-        `Prompt copied & opened in ${
-          llm.charAt(0).toUpperCase() + llm.slice(1)
-        }!`
+    if (!prompt) {
+      toast.error(
+        "Please fill in all required fields before generating a prompt."
       );
+      return;
     }
+    navigator.clipboard.writeText(prompt);
+    window.open(LLM_LINKS[llm], "_blank");
+    toast.success(`Prompt copied & opened in ${llm}!`);
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -59,15 +73,15 @@ export default function GeneratePromptButton({
 
         {isDropdownOpen && (
           <Menu.Items className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg overflow-hidden z-50">
-            {Object.entries(LLM_LINKS).map(([key]) => (
-              <Menu.Item key={key}>
+            {Object.keys(LLM_LINKS).map((llm) => (
+              <Menu.Item key={llm}>
                 {({ active }) => (
                   <button
-                    onClick={() => openLLM(key as keyof typeof LLM_LINKS)}
+                    onClick={() => openLLM(llm as keyof typeof LLM_LINKS)}
                     className={`w-full px-4 py-2 text-left text-gray-800 ${
                       active ? "bg-gray-200" : ""
                     }`}>
-                    Open {key.charAt(0).toUpperCase() + key.slice(1)}
+                    Open {llm}
                   </button>
                 )}
               </Menu.Item>
