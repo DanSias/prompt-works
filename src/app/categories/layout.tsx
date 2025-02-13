@@ -25,7 +25,7 @@ export default function CategoriesLayout({
   return (
     <div className="flex">
       {/* <Sidebar /> */}
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-8">
         {children}
         <Toaster position="top-right" />
       </main>
