@@ -142,7 +142,7 @@ export const projectManagementWorkflows: Workflow[] = [
     difficultyLevel: "Intermediate",
   },
   {
-    id: "task-prioritization",
+    id: "task-ranking",
     title: "Prioritize Project Tasks",
     description:
       "Rank project tasks by urgency and importance to improve execution.",

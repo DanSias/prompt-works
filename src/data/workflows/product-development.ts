@@ -59,7 +59,7 @@ export const productDevelopmentWorkflows: Workflow[] = [
     difficultyLevel: "Advanced",
   },
   {
-    id: "competitor-analysis",
+    id: "competitive-analysis",
     title: "Perform a Competitor Analysis",
     description: "Compare your product against competitors in the market.",
     fields: [
