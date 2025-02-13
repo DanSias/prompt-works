@@ -48,77 +48,80 @@ export default function WorkflowForm({ workflow }: { workflow: Workflow }) {
   };
 
   return (
-    <div className="space-y-4 mb-6">
-      <div className="mb-4">
-        <Breadcrumbs />
-      </div>
-      <div className="flex justify-between">
+    <section className="space-y-4 mb-6 overflow-visible  max-w-5xl mx-auto ">
+      <div className="flex justify-between mt-12">
         <h1 className="text-4xl font-bold">{workflow.title}</h1>
         <FavoriteButton workflow={workflow} size={32} />
       </div>
-      <p className="text-gray-600 mb-8">{workflow.description}</p>
+      <p className="text-gray-600 mb-12">{workflow.description}</p>
 
-      {/* Estimated Time & Difficulty */}
-      <div className="flex items-center gap-4 text-sm text-gray-500">
-        {workflow.estimatedTime && (
-          <span className="px-2 py-1 bg-gray-200 rounded-md">
-            ⏳ {workflow.estimatedTime}
-          </span>
-        )}
-        {workflow.difficultyLevel && (
-          <span className="px-2 py-1 bg-gray-200 rounded-md">
-            ⚡ {workflow.difficultyLevel}
-          </span>
-        )}
-      </div>
-      <hr className="text-zinc-300" />
+      <div className="bg-white p-8 mt-12 rounded-lg">
+        <div className="mb-4">
+          <Breadcrumbs />
+        </div>
 
-      {/* Dynamic Form Inputs */}
-      {workflow.fields.map((field) => (
-        <div key={field.name}>
-          <label className="block font-medium mb-1">
-            {field.label}
-            {field.required && <span className="text-red-500 ml-1">*</span>}
-          </label>
-
-          {field.type === "select" ? (
-            <CreatableSelect
-              options={field.options?.map((option: string) => ({
-                label: option,
-                value: option,
-              }))}
-              onChange={(selectedOption) =>
-                handleInputChange(selectedOption?.value || "", field.name)
-              }
-              placeholder={field.placeholder}
-              isClearable
-            />
-          ) : field.type === "textarea" ? (
-            <textarea
-              placeholder={field.placeholder}
-              value={formData[field.name] || ""}
-              onChange={(e) => handleInputChange(e.target.value, field.name)}
-              className="border p-2 w-full rounded h-32 resize-none"
-            />
-          ) : (
-            <input
-              type="text"
-              placeholder={field.placeholder}
-              value={formData[field.name] || ""}
-              onChange={(e) => handleInputChange(e.target.value, field.name)}
-              className="border p-2 w-full rounded"
-            />
+        {/* Estimated Time & Difficulty */}
+        <div className="flex items-center gap-4 text-sm text-gray-500 mb-8">
+          {workflow.estimatedTime && (
+            <span className="px-2 py-1 bg-gray-200 rounded-md">
+              ⏳ {workflow.estimatedTime}
+            </span>
           )}
-          {errors[field.name] && (
-            <p className="text-red-500 text-sm mt-1">{errors[field.name]}</p>
+          {workflow.difficultyLevel && (
+            <span className="px-2 py-1 bg-gray-200 rounded-md">
+              ⚡ {workflow.difficultyLevel}
+            </span>
           )}
         </div>
-      ))}
+        <hr className="text-zinc-300 mb-8" />
 
-      {/* Generate Prompt Button */}
-      <div className="flex justify-end mt-6">
-        <GeneratePromptButton generatePrompt={generatePrompt} />
+        {/* Dynamic Form Inputs */}
+        {workflow.fields.map((field) => (
+          <div key={field.name} className="mb-8">
+            <label className="block font-medium mb-1">
+              {field.label}
+              {field.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
+
+            {field.type === "select" ? (
+              <CreatableSelect
+                options={field.options?.map((option: string) => ({
+                  label: option,
+                  value: option,
+                }))}
+                onChange={(selectedOption) =>
+                  handleInputChange(selectedOption?.value || "", field.name)
+                }
+                placeholder={field.placeholder}
+                isClearable
+              />
+            ) : field.type === "textarea" ? (
+              <textarea
+                placeholder={field.placeholder}
+                value={formData[field.name] || ""}
+                onChange={(e) => handleInputChange(e.target.value, field.name)}
+                className="border p-2 w-full rounded h-32 resize-none"
+              />
+            ) : (
+              <input
+                type="text"
+                placeholder={field.placeholder}
+                value={formData[field.name] || ""}
+                onChange={(e) => handleInputChange(e.target.value, field.name)}
+                className="border p-2 w-full rounded"
+              />
+            )}
+            {errors[field.name] && (
+              <p className="text-red-500 text-sm mt-1">{errors[field.name]}</p>
+            )}
+          </div>
+        ))}
+
+        {/* Generate Prompt Button */}
+        <div className="flex justify-end mt-6">
+          <GeneratePromptButton generatePrompt={generatePrompt} />
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
