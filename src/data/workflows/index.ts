@@ -1,28 +1,30 @@
+// Category Workflows Map
+// This file maps workflow categories to their respective workflow lists.
+// It serves as a central index for accessing workflows by category throughout the application.
+
 import { Workflow } from "@/types/workflow";
-import { marketingWorkflows } from "@/data/workflows/marketing-content";
-import { customerCommunicationWorkflows } from "@/data/workflows/customer-communication";
+import { businessStrategyWorkflows } from "./business-strategy";
+import { customerExperienceWorkflows } from "./customer-experience";
 import { dataAnalysisWorkflows } from "@/data/workflows/data-analysis";
+import { financialAnalysisWorkflows } from "./financial-analysis";
 import { hrTasksWorkflows } from "@/data/workflows/hr-tasks";
-import { projectManagementWorkflows } from "@/data/workflows/project-management";
+import { marketingWorkflows } from "@/data/workflows/marketing-content";
 import { productDevelopmentWorkflows } from "@/data/workflows/product-development";
-import { customerSupportWorkflows } from "@/data/workflows/customer-support";
+import { productivityToolsWorkflows } from "@/data/workflows/productivity-tools";
+import { projectManagementWorkflows } from "@/data/workflows/project-management";
 import { salesOutreachWorkflows } from "@/data/workflows/sales-outreach";
 import { trainingDocsWorkflows } from "@/data/workflows/training-docs";
-import { productivityToolsWorkflows } from "@/data/workflows/productivity-tools";
-import { financialAnalysisWorkflows } from "./financial-analysis";
-import { businessStrategyWorkflows } from "./business-strategy";
 
 export const categoryWorkflowsMap: Record<string, Workflow[]> = {
-  "marketing-content": marketingWorkflows,
-  "customer-communication": customerCommunicationWorkflows,
+  "business-strategy": businessStrategyWorkflows,
+  "customer-experience": customerExperienceWorkflows,
   "data-analysis": dataAnalysisWorkflows,
+  "financial-analysis": financialAnalysisWorkflows,
   "hr-recruitment": hrTasksWorkflows,
-  "project-management": projectManagementWorkflows,
+  "marketing-content": marketingWorkflows,
   "product-development": productDevelopmentWorkflows,
-  "customer-support": customerSupportWorkflows,
+  "productivity-tools": productivityToolsWorkflows,
+  "project-management": projectManagementWorkflows,
   "sales-outreach": salesOutreachWorkflows,
   "training-docs": trainingDocsWorkflows,
-  "productivity-tools": productivityToolsWorkflows,
-  "financial-analysis": financialAnalysisWorkflows,
-  "business-strategy": businessStrategyWorkflows,
 };
