@@ -14,7 +14,7 @@ export default function WorkflowCards({
       {workflows.map((workflow) => (
         <div
           key={workflow.id}
-          className="bg-white p-4 border rounded-xl shadow hover:shadow-lg transition cursor-pointer relative">
+          className="bg-white p-4 border rounded-xl shadow hover:shadow-lg transition cursor-pointer relative z-10">
           {/* Top row: Title & Favorite Button */}
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-2xl font-semibold">
