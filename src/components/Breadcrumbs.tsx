@@ -29,11 +29,12 @@ export default function Breadcrumbs() {
 
   const currentCategory = categories.find(
     (cat) =>
-      cat.slug.trim().toLowerCase() === currentCategorySlug.trim().toLowerCase()
+      cat.slug.trim().toLowerCase() ===
+      currentCategorySlug?.trim().toLowerCase()
   );
 
   const workflows = currentCategory
-    ? categoryWorkflowsMap[currentCategory.slug]
+    ? categoryWorkflowsMap[currentCategory.slug] || []
     : [];
   const currentWorkflow = workflows.find((w) => w.id === currentWorkflowId);
 
@@ -43,7 +44,7 @@ export default function Breadcrumbs() {
   console.log("Categories Available:", categories);
 
   return (
-    <nav className="flex items-center text-sm text-gray-600 space-x-2">
+    <nav className="relative z-10 flex items-center text-sm text-gray-600 space-x-2">
       {/* Home Link */}
       <Link href="/" className="hover:underline text-blue-600">
         Home
@@ -51,14 +52,14 @@ export default function Breadcrumbs() {
       <ChevronRight className="w-4 h-4" />
 
       {/* Category Dropdown */}
-      {currentCategory && (
+      {currentCategory ? (
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button className="inline-flex items-center hover:underline text-blue-600">
             {currentCategory.title}
             <ChevronDown className="ml-1 w-4 h-4" />
           </Menu.Button>
 
-          <Menu.Items className="absolute mt-2 w-56 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+          <Menu.Items className="absolute mt-2 w-56 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none">
             {categories.map((category) => (
               <Menu.Item key={category.slug}>
                 {({ active }) => (
@@ -74,24 +75,30 @@ export default function Breadcrumbs() {
             ))}
           </Menu.Items>
         </Menu>
+      ) : (
+        <span className="text-gray-400">Unknown Category</span>
       )}
 
       {currentWorkflow && <ChevronRight className="w-4 h-4" />}
 
       {/* Workflow Dropdown */}
-      {currentWorkflow && (
+      {currentWorkflow ? (
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button className="inline-flex items-center hover:underline text-blue-600">
             {currentWorkflow.title}
             <ChevronDown className="ml-1 w-4 h-4" />
           </Menu.Button>
 
-          <Menu.Items className="absolute mt-2 w-56 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+          <Menu.Items className="absolute mt-2 w-56 bg-white shadow-lg rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none">
             {workflows.map((workflow) => (
               <Menu.Item key={workflow.id}>
                 {({ active }) => (
                   <Link
-                    href={`/categories/${currentCategory.slug}/${workflow.id}`}
+                    href={
+                      currentCategory
+                        ? `/categories/${currentCategory.slug}/${workflow.id}`
+                        : "#"
+                    }
                     className={`block px-4 py-2 text-sm ${
                       active ? "bg-gray-100" : ""
                     } text-gray-900 hover:bg-gray-100`}>
@@ -102,6 +109,8 @@ export default function Breadcrumbs() {
             ))}
           </Menu.Items>
         </Menu>
+      ) : (
+        <span className="text-gray-400">Unknown Workflow</span>
       )}
     </nav>
   );
