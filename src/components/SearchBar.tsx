@@ -1,26 +1,21 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import { categories } from "@/data/categories";
 import { categoryWorkflowsMap } from "@/data/workflows";
-import { Category } from "@/types/category";
-import { Workflow } from "@/types/workflow";
+// import { Workflow } from "@/types/workflow";
 import Link from "next/link";
 import { Search } from "lucide-react";
 
 /**
- * SearchBar Component
- *
- * Allows users to search across all categories and workflows by title and description.
- * Displays dynamic search results with links to the relevant pages.
- * Supports keyboard shortcut (Ctrl+K / Cmd+K) for quick access.
+ * Enhanced SearchBar Component
+ * - Removed category search
+ * - Displays results in two lists: Title matches first, then description matches.
+ * - Highlights search matches in titles.
  */
-
 export default function SearchBar() {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Keyboard shortcut listener for Ctrl+K / Cmd+K
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
@@ -28,108 +23,90 @@ export default function SearchBar() {
         inputRef.current?.focus();
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Define the type of filteredResults
-  const filteredResults: {
-    categories: Category[];
-    workflows: (Workflow & { categorySlug: string })[];
-  } = useMemo(() => {
-    if (!query) return { categories: [], workflows: [] };
-
+  const filteredResults = useMemo(() => {
+    if (!query) return { titleMatches: [], descriptionMatches: [] };
     const lowerQuery = query.toLowerCase();
 
-    // Filter categories
-    const matchingCategories = categories.filter(
-      (category) =>
-        category.title.toLowerCase().includes(lowerQuery) ||
-        category.description.toLowerCase().includes(lowerQuery)
+    const workflows = Object.values(categoryWorkflowsMap)
+      .flat()
+      .map((workflow) => ({ ...workflow }));
+
+    const titleMatches = workflows.filter((w) =>
+      w.title.toLowerCase().includes(lowerQuery)
+    );
+    const descriptionMatches = workflows.filter(
+      (w) =>
+        !titleMatches.includes(w) &&
+        w.description.toLowerCase().includes(lowerQuery)
     );
 
-    // Filter workflows across all categories
-    const matchingWorkflows = Object.entries(categoryWorkflowsMap).flatMap(
-      ([slug, workflows]) =>
-        workflows
-          .filter(
-            (workflow) =>
-              workflow.title.toLowerCase().includes(lowerQuery) ||
-              workflow.description.toLowerCase().includes(lowerQuery)
-          )
-          .map((workflow) => ({
-            ...workflow,
-            categorySlug: slug,
-          }))
-    );
-
-    return { categories: matchingCategories, workflows: matchingWorkflows };
+    return { titleMatches, descriptionMatches };
   }, [query]);
 
+  const highlightMatch = (text: string) => {
+    const regex = new RegExp(`(${query})`, "gi");
+    return text.replace(regex, "<strong>$1</strong>");
+  };
+
   return (
-    <div className="relative w-full max-w-lg mx-auto">
+    <div className="relative w-full max-w-lg mx-auto z-50">
       <div className="flex items-center border rounded-lg p-2 bg-white shadow-sm">
         <Search className="w-5 h-5 text-gray-400" />
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search categories or workflows..."
+          placeholder="Search 100+ Workflows to Boost Your Productivity..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="ml-2 w-full outline-none text-sm text-gray-900 placeholder-gray-400"
         />
       </div>
-
-      {/* Display search results */}
-      {query &&
-        (filteredResults.categories.length > 0 ||
-          filteredResults.workflows.length > 0) && (
-          <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto z-50">
-            {/* Display matching categories */}
-            {filteredResults.categories.length > 0 && (
-              <div className="p-2 border-b">
-                <h3 className="text-gray-500 text-xs uppercase mb-1">
-                  Categories
-                </h3>
-                {filteredResults.categories.map((category) => (
-                  <Link
-                    key={category.slug}
-                    href={`/categories/${category.slug}`}
-                    className="block px-2 py-1 hover:bg-gray-100 text-sm text-gray-800">
-                    {category.title}
-                  </Link>
-                ))}
+      {query && (
+        <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg max-h-48 overflow-y-auto z-50">
+          {filteredResults.titleMatches.length > 0 && (
+            <div className="p-2">
+              <h3 className="text-gray-500 text-xs uppercase mb-1">
+                Title Matches
+              </h3>
+              {filteredResults.titleMatches.map((workflow) => (
+                <Link
+                  key={workflow.id}
+                  href={`/categories/${workflow.categorySlug}/${workflow.id}`}
+                  className="block px-2 py-1 hover:bg-gray-100 text-sm text-gray-800"
+                  dangerouslySetInnerHTML={{
+                    __html: highlightMatch(workflow.title),
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          {filteredResults.descriptionMatches.length > 0 && (
+            <div className="p-2 border-t">
+              <h3 className="text-gray-500 text-xs uppercase mb-1">
+                Description Matches
+              </h3>
+              {filteredResults.descriptionMatches.map((workflow) => (
+                <Link
+                  key={workflow.id}
+                  href={`/workflows/${workflow.id}`}
+                  className="block px-2 py-1 hover:bg-gray-100 text-sm text-gray-800">
+                  {workflow.title}
+                </Link>
+              ))}
+            </div>
+          )}
+          {!filteredResults.titleMatches.length &&
+            !filteredResults.descriptionMatches.length && (
+              <div className="p-2 text-center text-gray-500 text-sm">
+                No results found.
               </div>
             )}
-
-            {/* Display matching workflows */}
-            {filteredResults.workflows.length > 0 && (
-              <div className="p-2">
-                <h3 className="text-gray-500 text-xs uppercase mb-1">
-                  Workflows
-                </h3>
-                {filteredResults.workflows.map((workflow) => (
-                  <Link
-                    key={workflow.id}
-                    href={`/categories/${workflow.categorySlug}/${workflow.id}`}
-                    className="block px-2 py-1 hover:bg-gray-100 text-sm text-gray-800">
-                    {workflow.title}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-      {/* Show message if no results found */}
-      {query &&
-        filteredResults.categories.length === 0 &&
-        filteredResults.workflows.length === 0 && (
-          <div className="absolute mt-2 w-full bg-white border rounded-lg shadow-lg p-2 text-center text-gray-500 text-sm">
-            No results found.
-          </div>
-        )}
+        </div>
+      )}
     </div>
   );
 }
