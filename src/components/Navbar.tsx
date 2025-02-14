@@ -73,7 +73,7 @@ export default function Header() {
         isOpen={isProfileOpen}
         onClose={() => setProfileOpen(false)}
         title="Your Profile">
-        <OnboardingForm />
+        <OnboardingForm onClose={() => setProfileOpen(false)} />
       </Modal>
     </header>
   );
