@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { saveUserProfile, getUserProfile } from "@/utils/userProfile";
 import { industries, tones, aiGoals } from "@/data/userOptions";
 import CreatableSelect from "react-select/creatable";
@@ -9,38 +8,24 @@ import CreatableSelect from "react-select/creatable";
 /**
  * OnboardingForm Component
  *
- * Guides new users through a quick setup to personalize AI-generated prompts.
- * Stores user details in localStorage for future use.
+ * - Updates localStorage in real-time as user types.
+ * - "Save & Continue" only closes the modal without submitting or redirecting.
  */
-export default function OnboardingForm() {
-  const router = useRouter();
-  const [userData, setUserData] = useState({
-    businessIndustry: "",
-    role: "",
-    preferredTone: "",
-    aiGoal: "",
-  });
-
-  useEffect(() => {
-    const storedData = getUserProfile();
-    if (storedData) {
-      setUserData((prev) => ({
-        businessIndustry: storedData.businessIndustry || prev.businessIndustry,
-        role: storedData.role || prev.role,
-        preferredTone: storedData.preferredTone || prev.preferredTone,
-        aiGoal: storedData.aiGoal || prev.aiGoal,
-      }));
-    }
-  }, []);
+export default function OnboardingForm({ onClose }: { onClose: () => void }) {
+  const [userData, setUserData] = useState(
+    () =>
+      getUserProfile() || {
+        businessIndustry: "",
+        role: "",
+        preferredTone: "",
+        aiGoal: "",
+      }
+  );
 
   const handleChange = (name: string, value: string) => {
-    setUserData({ ...userData, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    saveUserProfile(userData);
-    router.push("/categories"); // Redirect to main app
+    const updatedData = { ...userData, [name]: value };
+    setUserData(updatedData);
+    saveUserProfile(updatedData);
   };
 
   return (
@@ -52,7 +37,7 @@ export default function OnboardingForm() {
         Tell us a bit about yourself to enhance your AI-generated prompts.
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form className="space-y-4">
         <label className="block">
           <span className="text-gray-700">Industry</span>
           <CreatableSelect
@@ -126,7 +111,8 @@ export default function OnboardingForm() {
         </label>
 
         <button
-          type="submit"
+          type="button"
+          onClick={onClose} // Only closes modal, no submission
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
           Save & Continue
         </button>
